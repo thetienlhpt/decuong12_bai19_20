@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phiếu học tập Tin học 12 - Nghề Dịch vụ & Quản trị</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #064e3b;
+            --primary-yellow: #d97706;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* Nền chuyển động động (Animated Gradient Background) */
+        .animated-bg {
+            background: linear-gradient(-45deg, #f0fdf4, #fef3c7, #e0f2fe, #ffffff);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+        }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Họa tiết chìm (Pattern overlay) */
+        .pattern-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: radial-gradient(rgba(6, 78, 59, 0.05) 1.5px, transparent 1.5px);
+            background-size: 30px 30px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .font-art { font-family: 'Dancing Script', cursive; }
+        
+        /* Chữ chìm Watermark */
+        .watermark {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-25deg);
+            font-size: clamp(4rem, 10vw, 8rem);
+            color: rgba(6, 78, 59, 0.03);
+            font-weight: 800;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 0;
+            user-select: none;
+        }
+        
+        /* Giao diện kính (Glassmorphism) */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Nút đáp án phong cách thẻ */
+        .option-btn {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+        }
+        .option-btn:hover:not(:disabled) {
+            transform: translateY(-3px) scale(1.01);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border-color: #fcd34d;
+            background-color: #fffbeb;
+        }
+        .option-btn:active:not(:disabled) {
+            transform: translateY(0) scale(0.99);
+        }
+        
+        /* Trạng thái đáp án */
+        .option-btn.correct {
+            background: linear-gradient(to right, #dcfce7, #f0fdf4);
+            border-color: #22c55e;
+            color: #166534;
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.2);
+        }
+        .option-btn.wrong {
+            background: linear-gradient(to right, #fee2e2, #fef2f2);
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+
+        /* Badge chữ cái (A, B, C, D) */
+        .letter-badge {
+            transition: all 0.3s ease;
+        }
+        .option-btn:hover:not(:disabled) .letter-badge {
+            background-color: var(--primary-yellow);
+            color: white;
+            transform: rotate(-10deg) scale(1.1);
+        }
+        .option-btn.correct .letter-badge {
+            background-color: #22c55e; color: white; border-color: #22c55e;
+        }
+        .option-btn.wrong .letter-badge {
+            background-color: #ef4444; color: white; border-color: #ef4444;
+        }
+
+        /* Animations */
+        .fade-in { animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .pop-in { animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        /* Nút tùy chỉnh tĩnh */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-yellow), #f59e0b);
+            background-size: 200% auto;
+            transition: all 0.4s ease;
+        }
+        .btn-primary:hover:not(:disabled) {
+            background-position: right center;
+            box-shadow: 0 8px 20px -6px rgba(217, 119, 6, 0.6);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="animated-bg relative flex flex-col">
+
+    <!-- Lớp lưới họa tiết và Watermark -->
+    <div class="pattern-overlay"></div>
+    <div class="watermark font-art">Nguyen Tien</div>
+
+    <!-- Header hiện đại -->
+    <header class="glass-panel text-gray-800 p-4 sticky top-0 z-20 border-b border-gray-200 shadow-sm">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2">
+            <div class="flex items-center gap-2">
+                <div class="bg-[#064e3b] text-white p-2 rounded-lg shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <span class="font-bold tracking-wider text-[#064e3b]">TIN HỌC 12</span>
+            </div>
+            <div class="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#064e3b] to-[#d97706] text-center flex-grow uppercase tracking-widest text-sm md:text-base">
+                TRƯỜNG THPT LONG HẢI - PHƯỚC TỈNH
+            </div>
+            <div class="font-art text-2xl md:text-3xl text-[#d97706] drop-shadow-sm">GV. Nguyễn Tiên</div>
+        </div>
+    </header>
+
+    <!-- Global Stats Bar -->
+    <div id="globalStatsBar" class="hidden glass-panel border-b border-gray-200 z-10 sticky top-[72px] md:top-[68px]">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center text-xs md:text-sm font-bold text-gray-700">
+            <div class="flex items-center gap-2 mb-2 md:mb-0">
+                <span class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">👤</span>
+                <span id="displayHocSinh" class="text-blue-800 uppercase tracking-wide"></span>
+            </div>
+            <div class="flex flex-wrap gap-3 md:gap-6 bg-white/50 px-4 py-2 rounded-full border border-gray-100">
+                <span class="flex items-center gap-1"><span class="text-xl">🔄</span> Lượt: <span id="statAttempt" class="text-[#d97706]">1</span></span>
+                <span class="flex items-center gap-1"><span class="text-xl">📝</span> Đã làm: <span id="statCompleted">0</span>/25</span>
+                <span class="flex items-center gap-1 text-green-700"><span class="text-xl">✔️</span> <span id="statCorrect">0</span></span>
+                <span class="flex items-center gap-1 text-red-600"><span class="text-xl">❌</span> <span id="statWrong">0</span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow flex items-center justify-center p-4 z-10 relative">
+        
+        <!-- Màn hình nhập thông tin (Intro) -->
+        <div id="introScreen" class="glass-panel rounded-2xl p-8 md:p-10 w-full max-w-md fade-in border-t-8 border-[#064e3b]">
+            <div class="w-20 h-20 mx-auto bg-green-50 rounded-full flex items-center justify-center mb-4 border-4 border-white shadow-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-[#064e3b]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+            </div>
+            <h1 class="text-2xl md:text-3xl font-extrabold text-center text-gray-800 mb-2 tracking-tight">PHIẾU HỌC TẬP</h1>
+            <h2 class="text-sm text-center text-[#d97706] mb-8 font-bold uppercase tracking-wider bg-orange-50 py-2 rounded-lg">Nhóm nghề dịch vụ & quản trị CNTT</h2>
+            
+            <form id="loginForm" class="space-y-5">
+                <div class="relative">
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Họ và tên học sinh <span class="text-red-500">*</span></label>
+                    <input type="text" id="inputName" required class="w-full p-4 bg-white/80 border border-gray-200 rounded-xl focus:ring-4 focus:ring-green-500/20 focus:border-[#064e3b] outline-none transition-all font-medium text-gray-700" placeholder="Nhập họ và tên...">
+                </div>
+                <div class="relative">
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Lớp <span class="text-red-500">*</span></label>
+                    <input type="text" id="inputClass" required class="w-full p-4 bg-white/80 border border-gray-200 rounded-xl focus:ring-4 focus:ring-green-500/20 focus:border-[#064e3b] outline-none transition-all font-medium text-gray-700" placeholder="VD: 12A1...">
+                </div>
+                <button type="submit" class="w-full btn-primary text-white font-bold py-4 px-4 rounded-xl mt-6 flex justify-center items-center gap-2 group">
+                    BẮT ĐẦU NGAY
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                </button>
+            </form>
+            <div class="text-center mt-6 flex items-center justify-center gap-2 text-sm font-medium text-gray-500">
+                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                Lượt làm bài: <span id="introAttemptCount" class="font-bold text-[#d97706] text-lg">1</span>
+            </div>
+        </div>
+
+        <!-- Màn hình làm bài thi (Quiz) -->
+        <div id="quizScreen" class="hidden w-full max-w-4xl fade-in my-8">
+            
+            <!-- Progress Bar -->
+            <div class="w-full bg-white/60 rounded-full h-3 mb-6 shadow-inner border border-gray-200 overflow-hidden">
+                <div class="bg-gradient-to-r from-[#064e3b] to-[#22c55e] h-3 rounded-full transition-all duration-700 ease-out relative" id="progressBar" style="width: 0%">
+                    <div class="absolute inset-0 bg-white/20 animate-pulse"></div>
+                </div>
+            </div>
+
+            <div id="questionContainer" class="glass-panel rounded-3xl p-6 md:p-10 transition-colors duration-500 relative overflow-hidden">
+                <!-- Watermark nhỏ góc -->
+                <div class="absolute -right-10 -top-10 opacity-[0.03] transform rotate-12">
+                    <svg class="w-64 h-64" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                </div>
+
+                <div class="flex items-center gap-4 mb-8">
+                    <div class="flex-shrink-0 bg-[#064e3b] text-white w-14 h-14 rounded-2xl flex flex-col items-center justify-center shadow-lg transform -rotate-3">
+                        <span class="text-xs font-semibold opacity-80">CÂU</span>
+                        <span class="text-xl font-bold leading-none" id="currentQuestionNum">1</span>
+                    </div>
+                    <div class="h-px bg-gray-200 flex-grow"></div>
+                    <div class="text-gray-400 font-bold text-sm bg-white px-3 py-1 rounded-full border border-gray-100">25 CÂU HỎI</div>
+                </div>
+                
+                <h3 id="questionText" class="text-xl md:text-2xl font-bold text-gray-800 mb-8 leading-relaxed pop-in">
+                    <!-- Nội dung câu hỏi -->
+                </h3>
+
+                <div id="optionsGrid" class="grid grid-cols-1 gap-4">
+                    <!-- Các nút đáp án -->
+                </div>
+
+                <!-- Box hiển thị giải thích -->
+                <div id="explanationBox" class="hidden mt-8 p-5 bg-white border-2 border-orange-200 rounded-2xl text-gray-700 shadow-md relative overflow-hidden">
+                    <div class="absolute left-0 top-0 bottom-0 w-2 bg-gradient-to-b from-orange-400 to-red-400"></div>
+                    <div class="flex items-start gap-3">
+                        <div class="bg-orange-100 p-2 rounded-full text-orange-500 mt-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div>
+                            <strong class="text-orange-700 text-lg block mb-1">Gợi ý & Giải thích</strong> 
+                            <span id="explanationText" class="text-base leading-relaxed"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-10 flex justify-end">
+                    <button id="nextBtn" disabled class="bg-gray-200 text-gray-400 font-bold py-4 px-8 rounded-xl cursor-not-allowed transition-all duration-300 flex items-center gap-2">
+                        CÂU TIẾP THEO
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Màn hình kết quả (Result) -->
+        <div id="resultScreen" class="hidden glass-panel rounded-3xl p-8 md:p-12 w-full max-w-lg text-center border-t-8 border-[#d97706] fade-in relative overflow-hidden">
+            <!-- Hiệu ứng trang trí -->
+            <div class="absolute -top-20 -left-20 w-40 h-40 bg-yellow-300 rounded-full mix-blend-multiply filter blur-2xl opacity-50 animate-pulse"></div>
+            <div class="absolute -bottom-20 -right-20 w-40 h-40 bg-green-300 rounded-full mix-blend-multiply filter blur-2xl opacity-50 animate-pulse" style="animation-delay: 1s"></div>
+
+            <div id="resultIcon" class="text-7xl mb-4 pop-in drop-shadow-xl inline-block">🏆</div>
+            <h2 id="resultGreeting" class="text-3xl md:text-4xl font-extrabold text-[#064e3b] mb-3 tracking-tight">Xuất sắc!</h2>
+            <p class="text-gray-600 mb-8 text-lg font-medium" id="resultMessage">Bạn đã hoàn thành bài thi.</p>
+            
+            <div class="bg-white/80 rounded-2xl p-8 shadow-sm border border-gray-100 mb-8 backdrop-blur-sm relative">
+                <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-[#064e3b] text-white text-xs font-bold px-4 py-1 rounded-full uppercase tracking-widest shadow-md">Kết quả</div>
+                <div class="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#064e3b] to-[#d97706] mb-2 drop-shadow-sm flex items-baseline justify-center gap-1">
+                    <span id="finalScore">0</span><span class="text-3xl text-gray-300 font-bold">/25</span>
+                </div>
+                <p class="text-sm font-bold text-gray-400 uppercase tracking-widest mt-4">Câu trả lời đúng</p>
+                <div class="mt-6 p-3 bg-gray-50 rounded-lg text-sm text-gray-500 font-medium flex items-center justify-center gap-2 border border-gray-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" /></svg>
+                    <span id="saveStatus">Đang lưu kết quả...</span>
+                </div>
+            </div>
+
+            <button id="retryBtn" class="w-full btn-primary text-white font-bold py-4 px-6 rounded-xl text-lg flex items-center justify-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                LUYỆN TẬP LẠI
+            </button>
+        </div>
+
+    </main>
+
+    <script>
+        // --- DỮ LIỆU CÂU HỎI ---
+        const rawQuestions = [
+            { q: "Nhóm nghề nào trong ngành công nghệ thông tin (CNTT) chịu trách nhiệm cung cấp hỗ trợ kỹ thuật cho người dùng?", options: ["A. Kỹ sư phần mềm.", "B. Nhà phân tích hệ thống.", "C. Quản trị mạng.", "D. Kĩ thuật viên CNTT."], a: 3, expl: "Kĩ thuật viên CNTT có nhiệm vụ chính là hỗ trợ kỹ thuật, cài đặt phần mềm và khắc phục sự cố trực tiếp cho người dùng cuối." },
+            { q: "Phương án nào sau đây nêu đúng chức năng nghề bảo mật hệ thống thông tin?", options: ["A. Ngăn chặn truy cập trái phép, bảo vệ dữ liệu hệ thống.", "B. Tổ chức sự kiện và quảng bá sản phẩm công nghệ.", "C. Thiết kế giao diện và lập trình phần mềm ứng dụng.", "D. Lập trình các trò chơi và phần mềm giải trí di động."], a: 0, expl: "Chức năng chính của bảo mật hệ thống là ngăn chặn các truy cập trái phép, chống thất thoát và bảo vệ an toàn cho hệ thống dữ liệu." },
+            { q: "Công việc nào dưới đây thuộc nhóm nghề sửa chữa và bảo trì máy tính?", options: ["A. Thiết kế và xây dựng hệ điều hành.", "B. Cài đặt hoặc gỡ bỏ hệ điều hành.", "C. Phát triển phần mềm di động.", "D. Xây dựng các ứng dụng mạng."], a: 1, expl: "Bên cạnh việc sửa phần cứng, cài đặt và gỡ bỏ hệ điều hành, phần mềm là tác vụ cơ bản của thợ sửa chữa và bảo trì máy tính." },
+            { q: "Công việc nào dưới đây thuộc nghề quản trị mạng?", options: ["A. Bảo đảm hệ thống mạng hoạt động an toàn.", "B. Thiết kế và xây dựng các ứng dụng di động.", "C. Thiết kế cơ sở dữ liệu phân tán trên mạng.", "D. Phát triển phần mềm trò chơi trực tuyến."], a: 0, expl: "Nhà quản trị mạng chịu trách nhiệm thiết lập, duy trì, cấp quyền và đảm bảo hệ thống mạng của tổ chức hoạt động an toàn, ổn định." },
+            { q: "Trong lĩnh vực sửa chữa và bảo trì máy tính, vai trò chính của kĩ thuật viên là gì sau đây?", options: ["A. Xây dựng cơ sở dữ liệu.", "B. Phân tích dữ liệu.", "C. Sửa chữa và bảo trì phần cứng máy tính.", "D. Phát triển ứng dụng di động."], a: 2, expl: "Sửa chữa, thay thế và bảo trì các thiết bị phần cứng (RAM, ổ cứng, màn hình,...) là vai trò cốt lõi của kĩ thuật viên máy tính." },
+            { q: "Hành động ngăn cản, phòng ngừa sự sử dụng, truy cập, tiết lộ, chia sẻ, phát tán, ghi lại hoặc phá hủy thông tin chưa có sự cho phép thuộc lĩnh vực nào?", options: ["A. An toàn thông tin.", "B. Quản trị mạng.", "C. Quản trị CSDL.", "D. Hỗ trợ kỹ thuật."], a: 0, expl: "Mọi hoạt động bảo vệ thông tin khỏi các truy cập trái phép đều thuộc định nghĩa cơ bản của lĩnh vực An toàn thông tin (Information Security)." },
+            { q: "Công việc nào dưới đây thuộc nghề kĩ thuật viên công nghệ thông tin?", options: ["A. Bảo đảm hệ thống mạng hoạt động an toàn.", "B. Khắc phục lỗi, sữa chữa máy tính cho khách hàng.", "C. Thiết kê cơ sở dữ liệu phân tán trên mạng.", "D. Phát triển phân mêm trò chơi trực tuyến."], a: 1, expl: "Kĩ thuật viên CNTT (IT Helpdesk) thường xuyên phải trực tiếp chẩn đoán, hỗ trợ khắc phục lỗi và sửa chữa máy tính cho người dùng/khách hàng." },
+            { q: "Người làm nghề sửa chữa và bảo trì máy tính cần thực hiện công việc gì liên quan tới phần cứng?", options: ["A. Chỉ cài đặt phần mềm", "B. Kiểm soát và duy trì hoạt động của máy tính", "C. Lắp đặt phần mềm bảo mật", "D. Cập nhật hệ điều hành"], a: 1, expl: "Đối với phần cứng, họ cần thường xuyên kiểm tra, vệ sinh, và kiểm soát để duy trì tuổi thọ và hoạt động ổn định của máy tính." },
+            { q: "Một trong những công việc liên quan đến phần mềm trong sửa chữa và bảo trì máy tính là gì?", options: ["A. Thay thế bo mạch chủ", "B. Lắp đặt thêm thiết bị mạng", "C. Cài đặt, cấu hình các phần mềm thông dụng", "D. Thay màn hình có độ phân giải cao"], a: 2, expl: "Ngoài xử lý linh kiện cứng, việc cài đặt hệ điều hành (Windows, macOS) và các phần mềm Office, diệt virus... cũng là công việc bảo trì." },
+            { q: "Kĩ thuật viên công nghệ thông tin không thực hiện công việc nào sau đây?", options: ["A. Lắp đặt thiết bị phần cứng và thiết lập kết nối mạng", "B. Quản lí thiết bị mạng và điều chỉnh hiệu năng mạng", "C. Khắc phục lỗi máy tính cho khách hàng", "D. Cài đặt và nâng cấp phần mềm trên máy tính của nhân viên"], a: 1, expl: "Việc 'quản lí và tối ưu, điều chỉnh hiệu năng mạng' ở quy mô lớn là công việc chuyên sâu của Quản trị viên mạng, không phải của kĩ thuật viên hỗ trợ." },
+            { q: "Công việc nào dưới đây không thuộc nhóm nghề Sửa chữa và bảo trì máy tính?", options: ["A. Khắc phục lỗi, sữa chữa máy tính cho khách hàng.", "B. Quản lí máy tính, thiết bị mạng, thiết bị ngoại vi.", "C. Hướng dẫn sử dụng các thiết bị số và phần mềm mới.", "D. Sữa chữa những lỗ hổng an toàn thông tin."], a: 3, expl: "Xử lý, vá các 'lỗ hổng an toàn thông tin' (vulnerability) là chuyên môn cấp cao của Kỹ sư bảo mật/An toàn thông tin." },
+            { q: "Nghề Sửa chữa và bảo trì máy tính KHÔNG tham gia trực tiếp vào công việc nào sau đây?", options: ["A. Hướng dẫn khách hàng sử dụng phần mềm mới.", "B. Lập kế hoạch cải thiện và bảo trì hệ thống mạng.", "C. Tư vấn thiết bị dựa trên nhu cầu của khách hàng.", "D. Duy trì hoạt động của hệ thống có quy mô nhỏ."], a: 1, expl: "Lập kế hoạch quy hoạch và cải thiện tổng thể kiến trúc hệ thống mạng là nhiệm vụ của kỹ sư mạng hoặc cấp quản lý dự án mạng." },
+            { q: "Công việc nào sau đây KHÔNG thuộc nhiệm vụ chính của kĩ thuật viên sửa chữa và bảo trì máy tính?", options: ["A. Kiểm tra và thay thế linh kiện bị hỏng.", "B. Cài đặt trình điều khiển cho thiết bị ngoại vi.", "C. Chỉnh sửa mã nguồn ứng dụng để bổ sung chức năng mới.", "D. Cập nhật phần mềm lên phiên bản mới do nhà cung cấp phát hành."], a: 2, expl: "Viết code và 'chỉnh sửa mã nguồn phần mềm' để thêm tính năng là công việc của Lập trình viên (Developer/Kỹ sư phần mềm)." },
+            { q: "Phát biểu nào sau đây mô tả đúng về nghề quản trị mạng và hệ thống?", options: ["A. Người Quản trị mạng và hệ thống nhất thiết phải lập trình thành thạo.", "B. Để trở thành người Quản trị mạng và hệ thống cần phải được đào tạo một cách bài bản ở các bậc học tiếp theo.", "C. Kỹ sư phần mềm là người phụ trách công việc Quản trị mạng và hệ thống.", "D. Kỹ thuật viên công nghệ thông tin là người phụ trách công việc Quản trị mạng và hệ thống."], a: 1, expl: "Do yêu cầu kiến thức chuyên môn sâu rộng về kiến trúc mạng, máy chủ và hạ tầng bảo mật, nghề này cần được đào tạo bài bản ở Cao đẳng, Đại học." },
+            { q: "Chọn phát biểu SAI khi nói về nhóm ngành học chủ yếu đã và đang đào tạo nhân lực cho nghề Quản trị mạng và hệ thống?", options: ["A. Mạng máy tính và truyền thông.", "B. Quản trị và bảo trì hệ thống.", "C. Bảo mật hệ thống thông tin.", "D. Công nghệ phần mềm."], a: 3, expl: "Ngành 'Công nghệ phần mềm' chủ yếu đào tạo sinh viên về thuật toán, quy trình sản xuất, lập trình và kiểm thử phần mềm, không chuyên về hạ tầng mạng." },
+            { q: "Phương án nào sau đây không phải là công việc của Kĩ sư An toàn thông tin?", options: ["A. Tư vấn cho khách hàng mua máy tính mới hay nâng cấp phần cứng, phần mềm.", "B. Lập và triển khai thực hiện kế hoạch xử lý sự cố an toàn thông tin.", "C. Tư vấn về an toàn thông tin cho bộ phận phát triển phần cứng, phần mềm.", "D. Thiết lập và hướng dẫn các qui định an toàn thông tin cho người dùng."], a: 0, expl: "Tư vấn mua sắm hay nâng cấp phần cứng cho cá nhân là công việc của nhân viên kinh doanh hoặc kĩ thuật viên bảo trì." },
+            { q: "Việc ứng dụng quản trị cơ sở dữ liệu một cách khoa học trên máy tính không đem lại lợi ích nào sau đây?", options: ["A. Đảm bảo tính nhất quán của dữ liệu trong cơ sở dữ liệu.", "B. Hạn chế tối đa dư thừa dữ liệu trong cở sở dữ liệu.", "C. Đảm bảo an ninh và an toàn dữ liệu cho cở sở dữ liệu.", "D. Thực hiện tất cả những gì người dùng yêu cầu đối với cở sở dữ liệu."], a: 3, expl: "Hệ thống CSDL được thiết kế để phân quyền. Nó KHÔNG ĐƯỢC phép thực hiện mọi yêu cầu (đặc biệt là yêu cầu trái phép, không đúng chuẩn) của bất kỳ người dùng nào." },
+            { q: "Trong nhóm nghề dịch vụ và quản trị CNTT, nghề nào trong các phương án sau phối hợp với nhiều bộ phận khác để xây dựng hệ thống thông tin phù hợp với nhu cầu doanh nghiệp?", options: ["A. Lập trình viên.", "B. Phân tích hệ thống.", "C. Quản trị cơ sở dữ liệu.", "D. Kỹ thuật viên sửa máy."], a: 1, expl: "Nhà phân tích hệ thống (System Analyst) đóng vai trò là 'cầu nối' giữa nhu cầu nghiệp vụ của phòng ban và đội ngũ kĩ thuật lập trình." },
+            { q: "Công việc nào không phải là nhiệm vụ của chuyên viên công nghệ thông tin trong lĩnh vực Giáo dục?", options: ["A. Thiết kế và phát triển các ứng dụng giảng dạy trực tuyến", "B. Quản lý hệ thống thông tin giáo dục", "C. Thực hiện phẫu thuật y tế cho bệnh nhân", "D. Thiết kế đồ họa cho trang web của trường"], a: 2, expl: "Phẫu thuật y tế thuộc chuyên môn của Bác sĩ trong lĩnh vực Y tế, hoàn toàn không liên quan đến nghề CNTT." },
+            { q: "Công việc nào không phải là nhiệm vụ của chuyên viên công nghệ thông tin trong lĩnh vực tài chính ngân hàng?", options: ["A. Phát triển và bảo trì hệ thống ATM", "B. Quản lý các hệ thống máy tính và mạng", "C. Phân tích dữ liệu để đưa ra quyết định chiến lược", "D. Thiết kế giao diện cho trang web của trường học"], a: 3, expl: "Thiết kế web cho trường học là ứng dụng CNTT trong 'giáo dục', trong khi đề bài đang hỏi về môi trường 'tài chính ngân hàng'." },
+            { q: "Lí do nào sau đây là lí do chủ yếu nhất của sự gia tăng nhu cầu tuyển dụng vị trí sửa chữa và bảo trì máy tính?", options: ["A. Máy tính ngày càng được sử dụng rộng rãi trong xã hội hiện đại.", "B. Nhu cầu trang bị máy tính có cấu hình cao để chạy các ứng dụng AI.", "C. Nhiều trường đại học đào tạo về lĩnh vực kĩ thuật máy tính và mạng.", "D. Phần mềm độc hại ngày càng dễ phát tán trên không gian mạng."], a: 0, expl: "Sự phổ cập của máy tính và thiết bị thông minh ở mọi hộ gia đình và doanh nghiệp kéo theo nhu cầu khổng lồ về bảo dưỡng và sửa chữa." },
+            { q: "Vì sao nhóm nghề quản trị trong ngành Công nghệ Thông tin ngày càng có nhu cầu nhân lực cao?", options: ["A. Công nghệ ngày càng phát triển, các doanh nghiệp cần hệ thống mạng và bảo mật tốt hơn.", "B. Công việc quản trị mạng không đòi hỏi kỹ năng chuyên môn cao.", "C. Ngành quản trị Công nghệ Thông tin ít bị ảnh hưởng bởi sự thay đổi công nghệ.", "D. Việc bảo trì hệ thống mạng không cần nhân sự chuyên trách."], a: 0, expl: "Các doanh nghiệp chuyển đổi số mạnh mẽ khiến hệ thống mạng và dữ liệu trở nên phức tạp, đòi hỏi đội ngũ quản trị giỏi để vận hành trơn tru." },
+            { q: "Nhu cầu nhân lực của xã hội trong hiện tại và tương lai gần về nhóm nghề Bảo mật hệ thống thông tin là gì?", options: ["A. Giảm dần do sự phát triển của công nghệ tự động hóa.", "B. Tăng cao do nguy cơ tấn công mạng ngày càng tăng.", "C. Ổn định với nhu cầu hiện tại và không có xu hướng thay đổi trong tương lai.", "D. Giảm do chuyển sang các nghề khác nhau như quản lý dữ liệu, lập trình hệ thống..."], a: 1, expl: "Các cuộc tấn công mạng, đánh cắp dữ liệu ngày càng tinh vi và gia tăng về số lượng, buộc các tổ chức phải liên tục tuyển dụng chuyên gia bảo mật." },
+            { q: "Lí do nào sau đây là lí do chủ yếu nhất của sự gia tăng nhu cầu tuyển dụng vị trí kĩ sư an toàn thông tin?", options: ["A. Nước ta đang đẩy mạnh chuyển đổi số các hoạt động kinh tế - xã hội.", "B. Nhu cầu trang bị nhiều máy tính có cấu hình cao cho các doanh nghiệp.", "C. Nhiều trường đại học đào tạo về lĩnh vực an toàn thông tin.", "D. Phần mềm độc hại ngày càng dễ phát tán trên không gian mạng."], a: 0, expl: "Chuyển đổi số đưa mọi dữ liệu nhạy cảm (kinh tế, xã hội, cá nhân) lên không gian mạng, do đó bảo mật (an toàn thông tin) trở thành ưu tiên sống còn." },
+            { q: "Khi tìm kiếm thông tin về một ngành nghề thuộc lĩnh vực CNTT, thông tin nào sau đây là quan trọng nhất?", options: ["A. Tên của những chuyên gia đầu ngành tại địa phương em dự kiến làm việc.", "B. Yêu cầu công việc, những kỹ năng cần thiết, các chứng chỉ cần trang bị, cơ hội nghề nghiệp tại địa phương em dự kiến làm việc.", "C. Số lượng và tầm vóc các doanh nghiệp đang hoạt động cùng ngành nghề tại khu vực và trên thế giới.", "D. Mức thu nhập trung bình và mức thu nhập kỳ vọng đạt được của nhân lực hoạt động trong ngành."], a: 1, expl: "Hiểu rõ yêu cầu công việc, kỹ năng, chứng chỉ và nhu cầu tuyển dụng thực tế là cơ sở vững chắc nhất để học sinh định hướng học tập." }
+        ];
+
+        // --- CẤU HÌNH LIÊN KẾT GOOGLE SHEETS ---
+        // GIÁO VIÊN THAY THẾ URL BÊN DƯỚI BẰNG URL WEB APP CỦA GOOGLE APPS SCRIPT
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwb0cIR5EYioiELAXFcVOCLaYIbb0eciCnkSS5RhuqkcTmjFMEbubUC2IIgxGSsm8_jXQ/exec"; 
+
+        // --- TRẠNG THÁI ỨNG DỤNG ---
+        let currentQuestions = [];
+        let currentIndex = 0;
+        let score = 0;
+        let wrongAnswers = 0;
+        let attempt = parseInt(localStorage.getItem('tin12_attempts')) || 1;
+        let student = { name: '', class: '' };
+        let answeredCurrent = false;
+
+        // --- DOM Elements ---
+        const screens = {
+            intro: document.getElementById('introScreen'),
+            quiz: document.getElementById('quizScreen'),
+            result: document.getElementById('resultScreen')
+        };
+        const els = {
+            loginForm: document.getElementById('loginForm'),
+            inputName: document.getElementById('inputName'),
+            inputClass: document.getElementById('inputClass'),
+            globalStats: document.getElementById('globalStatsBar'),
+            progressBar: document.getElementById('progressBar'),
+            qContainer: document.getElementById('questionContainer'),
+            qNum: document.getElementById('currentQuestionNum'),
+            qText: document.getElementById('questionText'),
+            optionsGrid: document.getElementById('optionsGrid'),
+            nextBtn: document.getElementById('nextBtn'),
+            retryBtn: document.getElementById('retryBtn'),
+            sCompleted: document.getElementById('statCompleted'),
+            sCorrect: document.getElementById('statCorrect'),
+            sWrong: document.getElementById('statWrong'),
+            sAttempt: document.getElementById('statAttempt'),
+            iAttempt: document.getElementById('introAttemptCount'),
+            dName: document.getElementById('displayHocSinh'),
+            fScore: document.getElementById('finalScore'),
+            rGreet: document.getElementById('resultGreeting'),
+            rMsg: document.getElementById('resultMessage'),
+            rIcon: document.getElementById('resultIcon'),
+            saveStatus: document.getElementById('saveStatus'),
+            explanationBox: document.getElementById('explanationBox'),
+            explanationText: document.getElementById('explanationText')
+        };
+
+        // --- TẠO ÂM THANH (Web Audio API) ---
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSound(type) {
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            if (type === 'correct') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+                osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.1); // A5
+                gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            } else {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.3);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            }
+        }
+
+        // --- TIỆN ÍCH ---
+        function shuffleArray(array) {
+            let curId = array.length;
+            while (0 !== curId) {
+                let randId = Math.floor(Math.random() * curId);
+                curId -= 1;
+                let tmp = array[curId];
+                array[curId] = array[randId];
+                array[randId] = tmp;
+            }
+            return array;
+        }
+
+        function showScreen(screenName) {
+            Object.values(screens).forEach(s => {
+                s.classList.add('hidden');
+                s.classList.remove('pop-in'); // Reset animation
+            });
+            screens[screenName].classList.remove('hidden');
+            
+            // Xử lý thanh Stats
+            if(screenName !== 'intro') {
+                els.globalStats.classList.remove('hidden');
+                els.globalStats.classList.add('fade-in');
+            } else {
+                els.globalStats.classList.add('hidden');
+            }
+        }
+
+        // --- LOGIC CHÍNH ---
+        function init() {
+            els.iAttempt.innerText = attempt;
+            els.loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                startQuiz();
+            });
+            els.nextBtn.addEventListener('click', nextQuestion);
+            els.retryBtn.addEventListener('click', () => {
+                attempt++;
+                localStorage.setItem('tin12_attempts', attempt);
+                startQuiz(true);
+            });
+        }
+
+        function startQuiz(isRetry = false) {
+            if (!isRetry) {
+                student.name = els.inputName.value.trim();
+                student.class = els.inputClass.value.trim();
+            }
+            
+            // Xóa tiền tố A B C D khỏi câu trả lời và trộn
+            currentQuestions = shuffleArray([...rawQuestions]).map(q => {
+                return {
+                    question: q.q,
+                    options: q.options.map(opt => opt.replace(/^[A-D]\.\s*/, '')),
+                    correctAnswer: q.options[q.a].replace(/^[A-D]\.\s*/, ''),
+                    explanation: q.expl
+                }
+            });
+
+            currentQuestions.forEach(q => {
+                q.options = shuffleArray(q.options);
+                q.correctIndex = q.options.indexOf(q.correctAnswer);
+            });
+
+            currentIndex = 0;
+            score = 0;
+            wrongAnswers = 0;
+            
+            updateStatsBar();
+            els.dName.innerText = `${student.name} - ${student.class}`;
+            
+            showScreen('quiz');
+            renderQuestion();
+        }
+
+        function updateStatsBar() {
+            els.sAttempt.innerText = attempt;
+            els.sCompleted.innerText = currentIndex;
+            els.sCorrect.innerText = score;
+            els.sWrong.innerText = wrongAnswers;
+            // Update Progress bar
+            const percent = (currentIndex / currentQuestions.length) * 100;
+            els.progressBar.style.width = `${percent}%`;
+        }
+
+        function renderQuestion() {
+            answeredCurrent = false;
+            els.nextBtn.disabled = true;
+            els.nextBtn.className = "bg-gray-200 text-gray-400 font-bold py-4 px-8 rounded-xl cursor-not-allowed transition-all duration-300 flex items-center gap-2";
+
+            const q = currentQuestions[currentIndex];
+            els.qNum.innerText = currentIndex + 1;
+            
+            // Animation cho nội dung mới
+            els.qText.classList.remove('pop-in');
+            void els.qText.offsetWidth; // trigger reflow
+            els.qText.classList.add('pop-in');
+            els.qText.innerHTML = q.question;
+            
+            els.explanationBox.classList.add('hidden');
+            els.explanationBox.classList.remove('fade-in');
+            
+            els.optionsGrid.innerHTML = '';
+            
+            const prefixes = ['A', 'B', 'C', 'D'];
+            q.options.forEach((optText, index) => {
+                const btn = document.createElement('button');
+                btn.className = `option-btn w-full text-left p-4 rounded-xl bg-white text-gray-700 font-medium flex items-center gap-4 border border-gray-100 shadow-sm pop-in`;
+                btn.style.animationDelay = `${index * 0.1}s`;
+                btn.innerHTML = `
+                    <div class="letter-badge flex-shrink-0 w-10 h-10 rounded-full bg-gray-50 border-2 border-gray-200 flex items-center justify-center font-bold text-gray-400 text-lg shadow-inner">
+                        ${prefixes[index]}
+                    </div>
+                    <span class="flex-grow text-[15px] md:text-base leading-relaxed">${optText}</span>
+                `;
+                btn.onclick = () => selectAnswer(index, btn);
+                els.optionsGrid.appendChild(btn);
+            });
+
+            updateStatsBar();
+        }
+
+        function selectAnswer(selectedIndex, btnElement) {
+            if (answeredCurrent) return;
+            answeredCurrent = true;
+
+            const q = currentQuestions[currentIndex];
+            const isCorrect = selectedIndex === q.correctIndex;
+            const allBtns = els.optionsGrid.querySelectorAll('button');
+
+            // Disable all
+            allBtns.forEach(btn => {
+                btn.disabled = true;
+                btn.classList.add('cursor-not-allowed');
+                // Tách biệt nút được chọn và các nút khác
+                if (btn !== btnElement && Array.from(allBtns).indexOf(btn) !== q.correctIndex) {
+                    btn.classList.add('opacity-50');
+                }
+            });
+
+            if (isCorrect) {
+                btnElement.classList.add('correct');
+                score++;
+                playSound('correct');
+            } else {
+                btnElement.classList.add('wrong', 'shake');
+                wrongAnswers++;
+                // Highlight câu đúng
+                allBtns[q.correctIndex].classList.add('correct');
+                playSound('wrong');
+                
+                // Hiện giải thích
+                els.explanationText.innerText = q.explanation;
+                els.explanationBox.classList.remove('hidden');
+                els.explanationBox.classList.add('fade-in');
+            }
+
+            // Update Progress visually to show completion of current question
+            const percent = ((currentIndex + 1) / currentQuestions.length) * 100;
+            els.progressBar.style.width = `${percent}%`;
+
+            updateStatsBar();
+
+            // Enable Next
+            els.nextBtn.disabled = false;
+            els.nextBtn.className = "btn-primary text-white font-bold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 transform hover:-translate-y-1";
+            
+            if (currentIndex === currentQuestions.length - 1) {
+                els.nextBtn.innerHTML = 'XEM KẾT QUẢ <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>';
+            }
+        }
+
+        function nextQuestion() {
+            if (currentIndex < currentQuestions.length - 1) {
+                currentIndex++;
+                renderQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            currentIndex = currentQuestions.length; 
+            updateStatsBar();
+            els.fScore.innerText = score;
+            
+            let percentage = score / currentQuestions.length;
+            if (percentage === 1) {
+                els.rIcon.innerText = "🌟";
+                els.rGreet.innerText = "Xuất sắc tuyệt đối!";
+                els.rGreet.className = "text-3xl md:text-4xl font-extrabold text-[#d97706] mb-3 tracking-tight";
+                els.rMsg.innerText = "Bạn nắm kiến thức quá tuyệt vời. 10 điểm không có nhưng!";
+            } else if (percentage >= 0.8) {
+                els.rIcon.innerText = "🎉";
+                els.rGreet.innerText = "Rất tốt!";
+                els.rMsg.innerText = "Bạn đã nắm vững phần lớn kiến thức về nhóm nghề này.";
+            } else if (percentage >= 0.5) {
+                els.rIcon.innerText = "👍";
+                els.rGreet.innerText = "Khá tốt!";
+                els.rMsg.innerText = "Cố gắng ôn tập thêm một chút nữa nhé.";
+            } else {
+                els.rIcon.innerText = "💪";
+                els.rGreet.innerText = "Cố lên!";
+                els.rGreet.className = "text-3xl md:text-4xl font-extrabold text-red-600 mb-3 tracking-tight";
+                els.rMsg.innerText = "Hãy xem lại bài giảng và làm lại bài để cải thiện kết quả.";
+            }
+
+            showScreen('result');
+            saveToGoogleSheets();
+        }
+
+        function saveToGoogleSheets() {
+            if (!GOOGLE_SCRIPT_URL) {
+                els.saveStatus.innerHTML = "<span class='text-gray-400'>Chưa cấu hình Google Sheets</span>";
+                return;
+            }
+            
+            els.saveStatus.innerHTML = "<span class='animate-pulse text-[#d97706]'>Đang đồng bộ điểm...</span>";
+            
+            const formData = new FormData();
+            formData.append('name', student.name);
+            formData.append('className', student.class);
+            formData.append('score', score);
+            formData.append('total', currentQuestions.length);
+            formData.append('attempt', attempt);
+
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                body: formData,
+                mode: 'no-cors'
+            })
+            .then(() => {
+                els.saveStatus.innerHTML = "<span class='text-green-600 font-bold'>✔️ Đã lưu điểm thành công!</span>";
+            })
+            .catch(error => {
+                console.error('Error!', error);
+                els.saveStatus.innerHTML = "<span class='text-red-500 font-bold'>❌ Lỗi mạng. Chưa lưu được.</span>";
+            });
+        }
+
+        // Khởi động
+        window.onload = init;
+
+    </script>
+</body>
+</html>
